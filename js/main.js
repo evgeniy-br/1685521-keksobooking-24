@@ -15,11 +15,11 @@ const getRandomFractionalNumber = function(min, max, numberOfSigns) {
   return +randomNumber.toFixed(numberOfSigns);
 };
 
-const AVATAR_NUMBER  = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const AVATAR_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const TITLE = 'Условия проживания';
-const TYPE = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
-const CHECKIN = ['12:00', '13:00', '14:00'];
-const CHECKOUT = ['12:00', '13:00', '14:00'];
+const TYPES = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
+const CHECKIN_TIME_OPTIONS = ['12:00', '13:00', '14:00'];
+const CHECKOUT_TIME_OPTIONS = ['12:00', '13:00', '14:00'];
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 const DESCRIPTION = 'Вам понравится!';
 const PHOTOS = [
@@ -30,18 +30,18 @@ const PHOTOS = [
 
 const createAnnouncement = function () {
   const randomPrice = getRandomInteger(1, 100);
-  const randomType = getRandomInteger(0, TYPE.length - 1);
+  const randomType = getRandomInteger(0, TYPES.length - 1);
   const randomRooms = getRandomInteger(1, 5);
   const randomGuests = getRandomInteger(1, 10);
-  const randomCheckin = getRandomInteger(0, CHECKIN.length - 1);
-  const randomCheckout = getRandomInteger(0, CHECKOUT.length - 1);
+  const randomCheckin = getRandomInteger(0, CHECKIN_TIME_OPTIONS.length - 1);
+  const randomCheckout = getRandomInteger(0, CHECKOUT_TIME_OPTIONS.length - 1);
   const randomLat = getRandomFractionalNumber(35.65, 35.7, 5);
   const randomLng = getRandomFractionalNumber(139.7, 139.8, 5);
   let authorAvatar;
 
   const getAvatarNumber = function () {
-    const randomAvatarNumber = getRandomInteger(0, AVATAR_NUMBER.length - 1);
-    let numberAvatar = AVATAR_NUMBER[randomAvatarNumber];
+    const randomAvatarNumber = getRandomInteger(0, AVATAR_NUMBERS.length - 1);
+    let numberAvatar = AVATAR_NUMBERS[randomAvatarNumber];
     if (numberAvatar < 10) {
       numberAvatar = `0${numberAvatar}`;
     }
@@ -90,11 +90,11 @@ const createAnnouncement = function () {
       title: TITLE,
       address: `${randomLat}, ${randomLng}`,
       price: randomPrice,
-      type: TYPE[randomType],
+      type: TYPES[randomType],
       rooms: randomRooms,
       guests: randomGuests,
-      checkin: CHECKIN[randomCheckin],
-      checkout: CHECKOUT[randomCheckout],
+      checkin: CHECKIN_TIME_OPTIONS[randomCheckin],
+      checkout: CHECKOUT_TIME_OPTIONS[randomCheckout],
       features: randomArrayFeatures,
       description: DESCRIPTION,
       photos: randomArrayPhotos,
@@ -119,6 +119,6 @@ const createAnnouncement = function () {
   return announcement;
 };
 
-const similarAnnouncement = Array.from({length: 10}, createAnnouncement);
+const similarAnnouncements = Array.from({length: 10}, createAnnouncement);
 
-similarAnnouncement;
+similarAnnouncements;
