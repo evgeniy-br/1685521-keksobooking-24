@@ -9,7 +9,6 @@ const TYPE_OF_HOUSING = {
 };
 const templateContent = document.querySelector('#card').content; // Контент шаблона
 const cardTemplate = templateContent.querySelector('.popup'); // Шаблон
-const mapCanvas = document.querySelector('#map-canvas');
 
 const getTemplate = () => {
   let announcementTemplate = cardTemplate.cloneNode(true); // Клон шаблона
@@ -69,7 +68,7 @@ const getTemplate = () => {
     announcementTemplate.querySelector('.popup__avatar').src = announcementItem.author.avatar;
   });
 
-  return mapCanvas.appendChild(announcementTemplate);
+  return announcementTemplate;
 };
 
 getTemplate();
