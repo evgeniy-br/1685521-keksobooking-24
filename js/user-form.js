@@ -1,12 +1,25 @@
 const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
 const MAX_PRICE = 1000000;
+const PRICE_OF_HOUSING = {
+  flat: 1000,
+  bungalow: 0,
+  house: 5000,
+  palace: 10000,
+  hotel: 3000,
+};
 
 const headlineInput = document.querySelector('#title');
 const priceInput = document.querySelector('#price');
 const roomNumberSelect = document.querySelector('#room_number');
 const capacitySelect = document.querySelector('#capacity');
 const capacityOptions = capacitySelect.querySelectorAll('option');
+const typeOfHousingSelect = document.querySelector('#type');
+const priceOfHousingKeys = Object.keys(PRICE_OF_HOUSING);
+const timeIn = document.querySelector('#timein');
+const timeOut = document.querySelector('#timeout');
+
+//Валидация заголовка объявления "на лету"
 
 headlineInput.addEventListener('input', () => {
   const valueLength = headlineInput.value.length;
@@ -34,6 +47,8 @@ priceInput.addEventListener('input', () => {
   priceInput.reportValidity();
 });
 
+// Синхронизация полей "количество комнат" и "количество мест"
+
 roomNumberSelect.addEventListener('input', () => {
   const roomNumberValue = roomNumberSelect.value;
 
@@ -52,4 +67,29 @@ roomNumberSelect.addEventListener('input', () => {
       capacityOptions[3].removeAttribute('disabled', '');
     }
   });
+});
+
+// Синхронизация полей "тип жилья" и "цена за ночь"
+
+typeOfHousingSelect.addEventListener('input', () => {
+  const typeOfHousingValue = typeOfHousingSelect.value;
+  const priceOfHousing = PRICE_OF_HOUSING[typeOfHousingValue];
+
+  priceOfHousingKeys.some((key) => key === typeOfHousingValue); // Поиск соответсвия типа жилья с ценой
+  priceInput.min = priceOfHousing;
+  priceInput.placeholder = priceOfHousing;
+});
+
+// Синхронизация времени заезда и выезда
+
+timeIn.addEventListener('input', () => {
+  if (timeIn.value !== timeOut.value) {
+    timeOut.value = timeIn.value;
+  }
+});
+
+timeOut.addEventListener('input', () => {
+  if (timeOut.value !== timeIn.value) {
+    timeIn.value = timeOut.value;
+  }
 });
