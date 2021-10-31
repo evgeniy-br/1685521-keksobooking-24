@@ -69,6 +69,44 @@ roomNumberSelect.addEventListener('input', () => {
   });
 });
 
+const formAnnouncement = document.querySelector('.ad-form');
+const formAnnouncementFieldsets = formAnnouncement.querySelectorAll('fieldset');
+const formMapFilters = document.querySelector('.map__filters');
+const formMapFiltersFieldset = formMapFilters.querySelector('.map__features');
+const formMapFiltersSelect = formMapFilters.querySelectorAll('.map__filter');
+
+const activateInactiveState = () => {
+  // Блокировка формы нового объявления
+  formAnnouncement.classList.add('ad-form--disabled');
+  formAnnouncementFieldsets.forEach((fieldset) => {
+    fieldset.setAttribute('disabled', '');
+  });
+  // Блокировка фильтров
+  formMapFilters.classList.add('map__filters--disabled');
+  formMapFiltersFieldset.setAttribute('disabled', '');
+  formMapFiltersSelect.forEach((select) => {
+    select.setAttribute('disabled', '');
+  });
+};
+
+activateInactiveState();
+
+const activateActiveState = () => {
+  // Разблокировка формы нового объявления
+  formAnnouncement.classList.remove('ad-form--disabled');
+  formAnnouncementFieldsets.forEach((fieldset) => {
+    fieldset.removeAttribute('disabled', '');
+  });
+  // Разблокировка фильтров
+  formMapFilters.classList.remove('map__filters--disabled');
+  formMapFiltersFieldset.removeAttribute('disabled', '');
+  formMapFiltersSelect.forEach((select) => {
+    select.removeAttribute('disabled', '');
+  });
+};
+
+activateActiveState();
+
 // Синхронизация полей "тип жилья" и "цена за ночь"
 
 typeOfHousingSelect.addEventListener('input', () => {
@@ -93,3 +131,5 @@ timeOut.addEventListener('input', () => {
     timeIn.value = timeOut.value;
   }
 });
+
+
