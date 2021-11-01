@@ -1,10 +1,16 @@
+const START_LAT = 35.68469;
+const START_LNG = 139.77086;
+
+const address = document.querySelector('#address');
+address.setAttribute('value', `${START_LAT}, ${START_LNG}`);
+
 const map = L.map('map-canvas')
   .on('load', () => {
     console.log('Карта есть');
   })
   .setView({
-    lat: 35.68950,
-    lng: 139.69200,
+    lat: START_LAT,
+    lng: START_LNG,
   }, 10);
 
 L.tileLayer(
@@ -24,8 +30,8 @@ const mainPinIcon = L.icon(
 
 const marker = L.marker(
   {
-    lat: 35.68950,
-    lng: 139.69200,
+    lat: START_LAT,
+    lng: START_LNG,
   },
   {
     draggable: true,
@@ -34,5 +40,10 @@ const marker = L.marker(
 );
 
 marker.addTo(map);
+console.log(marker);
 
-
+marker.on('moveend', (evt) => {
+  const newСoordinates = evt.target.getLatLng();
+  const {lat, lng} = newСoordinates;
+  address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+});
