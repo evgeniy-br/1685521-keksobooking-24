@@ -1,12 +1,17 @@
+import {similarAnnouncements} from './data.js';
+import {getTemplate} from './popup.js';
+import {activateActiveState} from './user-form.js';
+
 const START_LAT = 35.68469;
 const START_LNG = 139.77086;
 
 const address = document.querySelector('#address');
+
 address.setAttribute('value', `${START_LAT}, ${START_LNG}`);
 
 const map = L.map('map-canvas')
   .on('load', () => {
-    console.log('Карта есть');
+    activateActiveState();
   })
   .setView({
     lat: START_LAT,
@@ -28,7 +33,36 @@ const mainPinIcon = L.icon(
   },
 );
 
-const marker = L.marker(
+const announcementIcon = L.icon(
+  {
+    iconUrl: 'img/pin.svg',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+  },
+);
+
+const balloon = getTemplate().querySelectorAll('.popup');
+let i = 0;
+
+
+similarAnnouncements.forEach((data) => {
+  const newСoordinates = data.location;
+  const {lat, lng} = newСoordinates;
+  const markerAnnouncement = L.marker(
+    {
+      lat,
+      lng,
+    },
+    {
+      icon: announcementIcon,
+    },
+  );
+
+  markerAnnouncement.addTo(map).bindPopup(balloon[i]);
+  i++;
+});
+
+const mainMarker = L.marker(
   {
     lat: START_LAT,
     lng: START_LNG,
@@ -39,10 +73,9 @@ const marker = L.marker(
   },
 );
 
-marker.addTo(map);
-console.log(marker);
+mainMarker.addTo(map);
 
-marker.on('moveend', (evt) => {
+mainMarker.on('moveend', (evt) => {
   const newСoordinates = evt.target.getLatLng();
   const {lat, lng} = newСoordinates;
   address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;

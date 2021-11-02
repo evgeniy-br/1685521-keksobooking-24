@@ -12,11 +12,16 @@ const cardTemplate = templateContent.querySelector('.popup'); // Шаблон
 
 const getTemplate = () => {
   let announcementTemplate = cardTemplate.cloneNode(true); // Клон шаблона
+  const similarListFragment = document.createDocumentFragment();
 
   similarAnnouncements.forEach((announcementItem) => {
     announcementTemplate = cardTemplate.cloneNode(true); // Клон шаблона
+    const avatar = announcementItem.author.avatar;
+    const description = announcementItem.offer.description;
+    const title = announcementItem.offer.title;
+    const address = announcementItem.offer.address;
     const housingTypesKeys = Object.keys(TYPE_OF_HOUSING);  // Массив ключей объекта TYPE_OF_HOUSING
-    const typeRandom = announcementItem.offer.type;
+    const type = announcementItem.offer.type;
     const price = announcementItem.offer.price;
     const rooms = announcementItem.offer.rooms;
     const guests = announcementItem.offer.guests;
@@ -26,23 +31,56 @@ const getTemplate = () => {
     const photosCollection = photosTemplate.children;
     const photoTemplate = photosTemplate.querySelector('.popup__photo');
     const arrayRandomPhotos = announcementItem.offer.photos;
+    const titleTemplate = announcementTemplate.querySelector('.popup__title');
+    const addressTemplate = announcementTemplate.querySelector('.popup__text--address');
+    const priceTemplate = announcementTemplate.querySelector('.popup__text--price');
+    const typeTemplate = announcementTemplate.querySelector('.popup__type');
+    const capacityTemplate = announcementTemplate.querySelector('.popup__text--capacity');
+    const timeTemplate = announcementTemplate.querySelector('.popup__text--time');
+    const descriptionTemplate = announcementTemplate.querySelector('.popup__description');
+    const avatarTemplate = announcementTemplate.querySelector('.popup__avatar');
 
-    announcementTemplate.querySelector('.popup__title').textContent = announcementItem.offer.title;
-    announcementTemplate.querySelector('.popup__text--address').textContent = announcementItem.offer.address;
-    announcementTemplate.querySelector('.popup__text--price').textContent = `${price} ₽/ночь`;
+    const removeBlockWithString = (block, template) => {
+      if (block === '') {
+        template.remove();
+      }
+    };
 
-    const housing = housingTypesKeys.some((key) => typeRandom === key); // Проверяет наличие совпадений в словаре TYPE_OF_HOUSING с typeRandom, чтобы вывести соответвствующий тип жилья
+    titleTemplate.textContent = title;
+    removeBlockWithString(title, timeTemplate);
 
-    if (housing) {
-      announcementTemplate.querySelector('.popup__type').textContent = TYPE_OF_HOUSING[typeRandom];
+    addressTemplate.textContent = address;
+
+    if (arrival === '' || departure === '') {
+      addressTemplate.remove();
     }
 
-    announcementTemplate.querySelector('.popup__text--capacity').textContent = `${rooms} комнаты для ${guests} гостей`;
-    announcementTemplate.querySelector('.popup__text--time').textContent = `Заезд после ${arrival}, выезд до ${departure}`;
+    priceTemplate.textContent = `${price} ₽/ночь`;
+    removeBlockWithString(price, priceTemplate);
+
+    const housing = housingTypesKeys.some((key) => type === key); // Проверяет наличие совпадений в словаре TYPE_OF_HOUSING с typeRandom, чтобы вывести соответвствующий тип жилья
+
+    if (housing) {
+      typeTemplate.textContent = TYPE_OF_HOUSING[type];
+    }
+
+    removeBlockWithString(type, typeTemplate);
+
+    capacityTemplate.textContent = `${rooms} комнаты для ${guests} гостей`;
+
+    if (rooms === '' || guests === '') {
+      capacityTemplate.remove();
+    }
+
+    timeTemplate.textContent = `Заезд после ${arrival}, выезд до ${departure}`;
+
+    if (arrival === '' || departure === '') {
+      timeTemplate.remove();
+    }
 
     const userFeatures = announcementItem.offer.features;
-    const featuresContainerClone = announcementTemplate.querySelector('.popup__features');
-    const featuresList = featuresContainerClone.querySelectorAll('.popup__feature');
+    const featuresTemplate = announcementTemplate.querySelector('.popup__features');
+    const featuresList = featuresTemplate.querySelectorAll('.popup__feature');
 
     featuresList.forEach((featuresListItem) => {
       const isNecessary = userFeatures.some(
@@ -54,6 +92,7 @@ const getTemplate = () => {
       }
     });
 
+    removeBlockWithString(userFeatures, featuresTemplate);
     photosTemplate.innerHTML = ''; // Чистит элемент с фото жилья
 
     let i = 0;
@@ -64,11 +103,18 @@ const getTemplate = () => {
       i++;
     }
 
-    announcementTemplate.querySelector('.popup__description').textContent = announcementItem.offer.description;
-    announcementTemplate.querySelector('.popup__avatar').src = announcementItem.author.avatar;
+    removeBlockWithString(arrayRandomPhotos, photosTemplate);
+
+    descriptionTemplate.textContent = description;
+    removeBlockWithString(description, descriptionTemplate);
+
+    avatarTemplate.src = avatar;
+    removeBlockWithString(avatar, avatarTemplate);
+
+    similarListFragment.appendChild(announcementTemplate);
   });
 
-  return announcementTemplate;
+  return similarListFragment;
 };
 
-getTemplate();
+export {getTemplate};
