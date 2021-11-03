@@ -132,4 +132,4 @@ timeOut.addEventListener('input', () => {
   }
 });
 
-
+export {activateActiveState};

@@ -106,6 +106,4 @@ const createAnnouncement = function () {
 
 const similarAnnouncements = Array.from({length: 10}, createAnnouncement);
 
-similarAnnouncements;
-
 export {similarAnnouncements};
