@@ -1,4 +1,4 @@
-import {map, announcementIcon} from './map.js';
+import {renderingBalloon} from './map.js';
 
 const TYPE_OF_HOUSING = {
   flat: 'Квартира',
@@ -117,25 +117,9 @@ const getTemplate = (similarAnnouncements) => {
     templateContent.appendChild(announcementTemplate);
   });
 
-  const balloon = Array.from(templateContent.querySelectorAll('.popup'));
+  const balloons = Array.from(templateContent.querySelectorAll('.popup'));
 
-  let j = 0;
-  similarAnnouncements.forEach((data) => {
-    const newСoordinates = data.location;
-    const {lat, lng} = newСoordinates;
-    const markerAnnouncement = L.marker(
-      {
-        lat,
-        lng,
-      },
-      {
-        icon: announcementIcon,
-      },
-    );
-
-    markerAnnouncement.addTo(map).bindPopup(balloon[j]);
-    j++;
-  });
+  renderingBalloon(similarAnnouncements, balloons);
 
   return templateContent;
 };

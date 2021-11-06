@@ -58,4 +58,33 @@ mainMarker.on('moveend', (evt) => {
   address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 });
 
-export {map, announcementIcon};
+const resetMainMarker = () => {
+  mainMarker.setLatLng({
+    lat: START_LAT,
+    lng: START_LNG,
+  });
+};
+
+const renderingBalloon = (ads, balloon) => {
+  let j = 0;
+  ads.forEach((ad) => {
+    const newСoordinates = ad.location;
+    const {lat, lng} = newСoordinates;
+    const markerAnnouncement = L.marker(
+      {
+        lat,
+        lng,
+      },
+      {
+        icon: announcementIcon,
+      },
+    );
+
+    markerAnnouncement.addTo(map).bindPopup(balloon[j]);
+    j++;
+  });
+};
+
+export {resetMainMarker, renderingBalloon, map, announcementIcon};
+
+
