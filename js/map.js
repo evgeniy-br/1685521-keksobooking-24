@@ -1,5 +1,3 @@
-import {similarAnnouncements} from './data.js';
-import {getTemplate} from './popup.js';
 import {activateActiveState} from './user-form.js';
 
 const START_LAT = 35.68469;
@@ -41,27 +39,6 @@ const announcementIcon = L.icon(
   },
 );
 
-const balloon = getTemplate().querySelectorAll('.popup');
-let i = 0;
-
-
-similarAnnouncements.forEach((data) => {
-  const newСoordinates = data.location;
-  const {lat, lng} = newСoordinates;
-  const markerAnnouncement = L.marker(
-    {
-      lat,
-      lng,
-    },
-    {
-      icon: announcementIcon,
-    },
-  );
-
-  markerAnnouncement.addTo(map).bindPopup(balloon[i]);
-  i++;
-});
-
 const mainMarker = L.marker(
   {
     lat: START_LAT,
@@ -80,3 +57,5 @@ mainMarker.on('moveend', (evt) => {
   const {lat, lng} = newСoordinates;
   address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 });
+
+export {map, announcementIcon};

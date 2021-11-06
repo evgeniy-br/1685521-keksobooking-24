@@ -18,6 +18,7 @@ const typeOfHousingSelect = document.querySelector('#type');
 const priceOfHousingKeys = Object.keys(PRICE_OF_HOUSING);
 const timeIn = document.querySelector('#timein');
 const timeOut = document.querySelector('#timeout');
+const userForm = document.querySelector('.ad-form');
 
 //Валидация заголовка объявления "на лету"
 
@@ -130,6 +131,20 @@ timeOut.addEventListener('input', () => {
   if (timeOut.value !== timeIn.value) {
     timeIn.value = timeOut.value;
   }
+});
+
+userForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+
+  const formData = new FormData(evt.target);
+
+  fetch(
+    'https://24.javascript.pages.academy/keksobooking',
+    {
+      method: 'POST',
+      body: formData,
+    },
+  );
 });
 
 export {activateActiveState};
