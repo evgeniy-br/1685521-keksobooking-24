@@ -1,19 +1,20 @@
 import {userForm} from './user-form.js';
 
-const createLoader = (onSuccess, onError) => () => {
+const createLoader = (onSuccess, onError, activatePage) => () => {
   fetch('https://24.javascript.pages.academy/keksobooking/data')
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        onError('Не удалось получить данные. Попробуйте перезагрузить страницу');
       }
+
+      throw new Error('Не удалось получить данные. Попробуйте перезагрузить страницу');
     })
     .then((data) => {
       onSuccess(data);
+      activatePage();
     })
-    .catch(() => {
-      onError('Не удалось получить данные. Попробуйте перезагрузить страницу');
+    .catch((err) => {
+      onError(err);
     });
 };
 

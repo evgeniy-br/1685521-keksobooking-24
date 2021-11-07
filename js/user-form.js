@@ -187,4 +187,4 @@ formResetButton.addEventListener('click', () => {
   formFilters.reset();
 });
 
-export {activateActiveState, resetForm, userForm, treatmentMessageError};
+export {activateActiveState, resetForm, userForm, treatmentMessageError, activateInactiveState};
