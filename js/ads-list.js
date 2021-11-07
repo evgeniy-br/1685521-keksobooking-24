@@ -1,4 +1,4 @@
-import {similarAnnouncements} from './data.js';
+import {renderingBalloon} from './map.js';
 
 const TYPE_OF_HOUSING = {
   flat: 'Квартира',
@@ -10,9 +10,9 @@ const TYPE_OF_HOUSING = {
 const templateContent = document.querySelector('#card').content; // Контент шаблона
 const cardTemplate = templateContent.querySelector('.popup'); // Шаблон
 
-const getTemplate = () => {
+const getTemplate = (similarAnnouncements) => {
   let announcementTemplate = cardTemplate.cloneNode(true); // Клон шаблона
-  const similarListFragment = document.createDocumentFragment();
+  document.querySelector('#card').innerHTML = '';
 
   similarAnnouncements.forEach((announcementItem) => {
     announcementTemplate = cardTemplate.cloneNode(true); // Клон шаблона
@@ -50,10 +50,7 @@ const getTemplate = () => {
     removeBlockWithString(title, timeTemplate);
 
     addressTemplate.textContent = address;
-
-    if (arrival === '' || departure === '') {
-      addressTemplate.remove();
-    }
+    removeBlockWithString(address, addressTemplate);
 
     priceTemplate.textContent = `${price} ₽/ночь`;
     removeBlockWithString(price, priceTemplate);
@@ -82,25 +79,31 @@ const getTemplate = () => {
     const featuresTemplate = announcementTemplate.querySelector('.popup__features');
     const featuresList = featuresTemplate.querySelectorAll('.popup__feature');
 
-    featuresList.forEach((featuresListItem) => {
-      const isNecessary = userFeatures.some(
-        (userFeature) => featuresListItem.classList.contains(`popup__feature--${userFeature}`),
-      );
+    if (userFeatures) {
+      featuresList.forEach((featuresListItem) => {
+        const isNecessary = userFeatures.some(
+          (userFeature) => featuresListItem.classList.contains(`popup__feature--${userFeature}`),
+        );
 
-      if (!isNecessary) {
-        featuresListItem.remove();
-      }
-    });
+        if (!isNecessary) {
+          featuresListItem.remove();
+        }
+      });
+    } else {
+      featuresTemplate.remove();
+    }
 
-    removeBlockWithString(userFeatures, featuresTemplate);
     photosTemplate.innerHTML = ''; // Чистит элемент с фото жилья
-
-    let i = 0;
-    while (photosCollection.length < arrayRandomPhotos.length) {
-      const clonePhoto = photoTemplate.cloneNode(true);
-      clonePhoto.src = arrayRandomPhotos[i];
-      photosTemplate.appendChild(clonePhoto);
-      i++;
+    if (arrayRandomPhotos) {
+      let i = 0;
+      while (photosCollection.length < arrayRandomPhotos.length) {
+        const clonePhoto = photoTemplate.cloneNode(true);
+        clonePhoto.src = arrayRandomPhotos[i];
+        photosTemplate.appendChild(clonePhoto);
+        i++;
+      }
+    } else {
+      photosTemplate.remove();
     }
 
     removeBlockWithString(arrayRandomPhotos, photosTemplate);
@@ -111,10 +114,14 @@ const getTemplate = () => {
     avatarTemplate.src = avatar;
     removeBlockWithString(avatar, avatarTemplate);
 
-    similarListFragment.appendChild(announcementTemplate);
+    templateContent.appendChild(announcementTemplate);
   });
 
-  return similarListFragment;
+  const balloons = Array.from(templateContent.querySelectorAll('.popup'));
+
+  renderingBalloon(similarAnnouncements, balloons);
+
+  return templateContent;
 };
 
-export {getTemplate};
+export {getTemplate, templateContent};

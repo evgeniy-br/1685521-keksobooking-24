@@ -1,3 +1,5 @@
+import {resetMainMarker} from './map.js';
+
 const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
 const MAX_PRICE = 1000000;
@@ -18,6 +20,15 @@ const typeOfHousingSelect = document.querySelector('#type');
 const priceOfHousingKeys = Object.keys(PRICE_OF_HOUSING);
 const timeIn = document.querySelector('#timein');
 const timeOut = document.querySelector('#timeout');
+const userForm = document.querySelector('.ad-form');
+const formFilters = document.querySelector('.map__filters');
+const successMessageContent = document.querySelector('#success').content;
+const successMessage = successMessageContent.querySelector('.success');
+const indexBody = document.querySelector('body');
+const errorMessageContent = document.querySelector('#error').content;
+const errorMessage = errorMessageContent.querySelector('.error');
+const errorButton = errorMessage.querySelector('.error__button');
+const formResetButton = userForm.querySelector('.ad-form__reset');
 
 //Валидация заголовка объявления "на лету"
 
@@ -132,4 +143,48 @@ timeOut.addEventListener('input', () => {
   }
 });
 
-export {activateActiveState};
+// Сброс формы
+
+const resetForm = () => {
+  userForm.reset();
+  formFilters.reset();
+  resetMainMarker();
+  indexBody.appendChild(successMessage);
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      successMessage.remove();
+    }
+  });
+
+  document.addEventListener('click', () => {
+    successMessage.remove();
+  });
+};
+
+const treatmentMessageError = () => {
+  indexBody.appendChild(errorMessage);
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      errorMessage.remove();
+    }
+  });
+
+  document.addEventListener('click', () => {
+    errorMessage.remove();
+  });
+
+  errorButton.addEventListener('click', () => {
+    errorMessage.remove();
+  });
+};
+
+formResetButton.addEventListener('click', () => {
+  resetMainMarker();
+  formFilters.reset();
+});
+
+export {activateActiveState, resetForm, userForm, treatmentMessageError};
