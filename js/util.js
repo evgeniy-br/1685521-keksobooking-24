@@ -38,4 +38,20 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {getRandomInteger, getRandomFractionalNumber, showAlert};
+const isArrayInclude = (array1, array2) => {
+  let isInclude = true;
+
+  if (array1 === undefined) {
+    array1 = [];
+  }
+
+  for (let i = 0; i < array2.length; i++) {
+    if (!(array1.includes(array2[i]))) {
+      isInclude = false;
+    }
+  }
+
+  return isInclude;
+};
+
+export {getRandomInteger, getRandomFractionalNumber, showAlert, isArrayInclude};

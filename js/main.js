@@ -3,6 +3,7 @@ import {resetForm, treatmentMessageError, activateInactiveState, activateActiveS
 import './map.js';
 import {createLoader, setUserFormSubmit} from './load.js';
 import {showAlert} from './util.js';
+import './filter.js';
 
 activateInactiveState();
 

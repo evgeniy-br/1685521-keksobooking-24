@@ -1,4 +1,5 @@
 import {resetMainMarker} from './map.js';
+import {loadAds} from './main.js';
 
 const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
@@ -185,6 +186,7 @@ const treatmentMessageError = () => {
 formResetButton.addEventListener('click', () => {
   resetMainMarker();
   formFilters.reset();
+  loadAds();
 });
 
 export {activateActiveState, resetForm, userForm, treatmentMessageError, activateInactiveState};
