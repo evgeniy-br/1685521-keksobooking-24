@@ -1,7 +1,7 @@
-import {userForm} from './user-form.js';
-import {markerGroup} from './map.js';
+import {userForm, setFilterChange} from './user-form.js';
+import {debounce} from './utils/debounce.js';
 
-const formFilters = document.querySelector('.map__filters');
+const RERENDER_DELAY = 500;
 
 const createLoader = (onSuccess, onError, activatePage) => () => {
   fetch('https://24.javascript.pages.academy/keksobooking/data')
@@ -10,18 +10,15 @@ const createLoader = (onSuccess, onError, activatePage) => () => {
         return response.json();
       }
 
-      throw new Error('Не удалось получить данные. Попробуйте позже');
+      throw new Error('Не удалось получить данные с сервера. Попробуйте позже');
     })
     .then((data) => {
-      onSuccess(data);
+      onSuccess(data.slice(0, 10));
       activatePage();
-      formFilters.addEventListener('change', () => {
-        markerGroup.clearLayers();
-        onSuccess(data);
-      });
+      setFilterChange(debounce(() => onSuccess(data), RERENDER_DELAY));
     })
     .catch((err) => {
-      console.error(err);
+      onError(err);
     });
 };
 
@@ -52,3 +49,7 @@ const setUserFormSubmit = (onSuccess, onError) => {
 };
 
 export {createLoader, setUserFormSubmit};
+// formFilters.addEventListener('change', () => {
+//         markerGroup.clearLayers();
+//         onSuccess(data);
+//       });

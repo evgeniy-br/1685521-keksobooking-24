@@ -139,7 +139,7 @@ const getTemplate = (similarAnnouncements) => {
     });
 
   const balloons = Array.from(templateContent.querySelectorAll('.popup'));
-  console.log(similarAds);
+
   renderingBalloon(similarAds, balloons);
 };
 
