@@ -34,7 +34,6 @@ const getTemplate = (similarAnnouncements) => {
   });
 
   similarAds
-    .sort(compareAds)
     .forEach((announcementItem) => {
       announcementTemplate = cardTemplate.cloneNode(true); // Клон шаблона
       const avatar = announcementItem.author.avatar;
@@ -140,7 +139,7 @@ const getTemplate = (similarAnnouncements) => {
 
   const balloons = Array.from(templateContent.querySelectorAll('.popup'));
 
-  renderingBalloon(similarAds, balloons);
+  renderingBalloon(similarAds.sort(compareAds).slice(0, 10), balloons);
 };
 
 export {getTemplate, templateContent};
