@@ -150,6 +150,8 @@ const resetForm = () => {
   userForm.reset();
   formFilters.reset();
   resetMainMarker();
+  markerGroup.clearLayers();
+  loadAds();
   indexBody.appendChild(successMessage);
 
   document.addEventListener('keydown', (evt) => {
