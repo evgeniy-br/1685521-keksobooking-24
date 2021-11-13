@@ -101,8 +101,6 @@ const activateInactiveState = () => {
   });
 };
 
-activateInactiveState();
-
 const activateActiveState = () => {
   // Разблокировка формы нового объявления
   formAnnouncement.classList.remove('ad-form--disabled');
@@ -116,8 +114,6 @@ const activateActiveState = () => {
     select.removeAttribute('disabled', '');
   });
 };
-
-activateActiveState();
 
 // Синхронизация полей "тип жилья" и "цена за ночь"
 
