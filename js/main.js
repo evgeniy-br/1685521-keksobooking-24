@@ -1,10 +1,13 @@
 import {getTemplate} from './ads-list.js';
-import {resetForm, treatmentMessageError} from './user-form.js';
+import {resetForm, treatmentMessageError, activateInactiveState, activateActiveState} from './user-form.js';
 import './map.js';
 import {createLoader, setUserFormSubmit} from './load.js';
 import {showAlert} from './util.js';
+import './filter.js';
 
-const loadAds = createLoader(getTemplate, showAlert);
+activateInactiveState();
+
+const loadAds = createLoader(getTemplate, showAlert, activateActiveState);
 
 loadAds();
 

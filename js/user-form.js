@@ -1,4 +1,5 @@
-import {resetMainMarker} from './map.js';
+import {resetMainMarker, markerGroup} from './map.js';
+import {loadAds} from './main.js';
 
 const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
@@ -149,6 +150,8 @@ const resetForm = () => {
   userForm.reset();
   formFilters.reset();
   resetMainMarker();
+  markerGroup.clearLayers();
+  loadAds();
   indexBody.appendChild(successMessage);
 
   document.addEventListener('keydown', (evt) => {
@@ -183,8 +186,17 @@ const treatmentMessageError = () => {
 };
 
 formResetButton.addEventListener('click', () => {
+  markerGroup.clearLayers();
   resetMainMarker();
   formFilters.reset();
+  loadAds();
 });
 
-export {activateActiveState, resetForm, userForm, treatmentMessageError};
+const setFilterChange = (cb) => {
+  formFilters.addEventListener('change', () => {
+    cb();
+    markerGroup.clearLayers();
+  });
+};
+
+export {activateActiveState, resetForm, userForm, setFilterChange, treatmentMessageError, activateInactiveState};

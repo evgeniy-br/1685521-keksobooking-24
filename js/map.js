@@ -1,4 +1,4 @@
-import {activateActiveState} from './user-form.js';
+import {activateActiveState, activateInactiveState} from './user-form.js';
 
 const START_LAT = 35.68469;
 const START_LNG = 139.77086;
@@ -6,6 +6,8 @@ const START_LNG = 139.77086;
 const address = document.querySelector('#address');
 
 address.setAttribute('value', `${START_LAT}, ${START_LNG}`);
+
+activateInactiveState();
 
 const map = L.map('map-canvas')
   .on('load', () => {
@@ -65,11 +67,12 @@ const resetMainMarker = () => {
   });
 };
 
+const markerGroup = L.layerGroup().addTo(map);
+
 const renderingBalloon = (ads, balloon) => {
   let j = 0;
   ads.forEach((ad) => {
-    const newСoordinates = ad.location;
-    const {lat, lng} = newСoordinates;
+    const {lat, lng} = ad.location;
     const markerAnnouncement = L.marker(
       {
         lat,
@@ -80,11 +83,11 @@ const renderingBalloon = (ads, balloon) => {
       },
     );
 
-    markerAnnouncement.addTo(map).bindPopup(balloon[j]);
+    markerAnnouncement.addTo(markerGroup).bindPopup(balloon[j]);
     j++;
   });
 };
 
-export {resetMainMarker, renderingBalloon, map, announcementIcon};
+export {resetMainMarker, renderingBalloon, map, announcementIcon, markerGroup};
 
 
