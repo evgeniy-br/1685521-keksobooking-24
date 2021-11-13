@@ -1,16 +1,16 @@
-import {getTemplate} from './ads-list.js';
-import {resetForm, treatmentMessageError, activateInactiveState, activateActiveState} from './user-form.js';
+import { getTemplate } from './ads-list.js';
+import { resetForm, treatmentMessageError, activateInactiveState } from './user-form.js';
 import './map.js';
-import {createLoader, setUserFormSubmit} from './load.js';
-import {showAlert} from './util.js';
+import { createLoader, setUserFormSubmit } from './load.js';
+import { showAlert } from './util.js';
 import './filter.js';
 
-activateInactiveState();
+const loadAds = createLoader(getTemplate, showAlert);
 
-const loadAds = createLoader(getTemplate, showAlert, activateActiveState);
+activateInactiveState();
 
 loadAds();
 
 setUserFormSubmit(resetForm, treatmentMessageError);
 
-export {loadAds};
+export { loadAds };

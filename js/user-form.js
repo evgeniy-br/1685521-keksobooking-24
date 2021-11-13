@@ -1,5 +1,6 @@
-import {resetMainMarker, markerGroup} from './map.js';
-import {loadAds} from './main.js';
+import { resetMainMarker, markerGroup } from './map.js';
+import { loadAds } from './main.js';
+import { isEscapeKey } from './util.js';
 
 const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
@@ -151,7 +152,7 @@ const resetForm = () => {
   indexBody.appendChild(successMessage);
 
   document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
+    if (isEscapeKey) {
       evt.preventDefault();
       successMessage.remove();
     }
@@ -166,7 +167,7 @@ const treatmentMessageError = () => {
   indexBody.appendChild(errorMessage);
 
   document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
+    if (isEscapeKey) {
       evt.preventDefault();
       errorMessage.remove();
     }
@@ -191,8 +192,7 @@ formResetButton.addEventListener('click', () => {
 const setFilterChange = (cb) => {
   formFilters.addEventListener('change', () => {
     cb();
-    markerGroup.clearLayers();
   });
 };
 
-export {activateActiveState, resetForm, userForm, setFilterChange, treatmentMessageError, activateInactiveState};
+export { activateActiveState, resetForm, userForm, setFilterChange, treatmentMessageError, activateInactiveState };

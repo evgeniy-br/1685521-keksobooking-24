@@ -1,5 +1,6 @@
-import {renderingBalloon} from './map.js';
-import {determinePrice, determineFeatures, compareAds} from './filter.js';
+import { renderingBalloon } from './map.js';
+import { determinePrice, determineFeatures, compareAds } from './filter.js';
+import { markerGroup } from './map.js';
 
 const TYPE_OF_HOUSING = {
   flat: 'Квартира',
@@ -34,6 +35,8 @@ const getTemplate = (similarAnnouncements) => {
   });
 
   similarAds
+    .slice()
+    .sort(compareAds)
     .forEach((announcementItem) => {
       announcementTemplate = cardTemplate.cloneNode(true); // Клон шаблона
       const avatar = announcementItem.author.avatar;
@@ -113,7 +116,9 @@ const getTemplate = (similarAnnouncements) => {
 
   const balloons = Array.from(templateContent.querySelectorAll('.popup'));
 
-  renderingBalloon(similarAds.sort(compareAds).slice(0, 10), balloons);
+  markerGroup.clearLayers();
+
+  renderingBalloon(similarAds.slice(0, 10), balloons);
 };
 
-export {getTemplate, templateContent};
+export { getTemplate, templateContent };

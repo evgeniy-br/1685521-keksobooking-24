@@ -1,9 +1,10 @@
-import {userForm, setFilterChange} from './user-form.js';
-import {debounce} from './utils/debounce.js';
+import { userForm, setFilterChange } from './user-form.js';
+import { debounce } from './utils/debounce.js';
+import { compareAds } from './filter.js';
 
 const RERENDER_DELAY = 500;
 
-const createLoader = (onSuccess, onError, activatePage) => () => {
+const createLoader = (onSuccess, onError) => () => {
   fetch('https://24.javascript.pages.academy/keksobooking/data')
     .then((response) => {
       if (response.ok) {
@@ -13,8 +14,7 @@ const createLoader = (onSuccess, onError, activatePage) => () => {
       throw new Error('Не удалось получить данные с сервера. Попробуйте позже');
     })
     .then((data) => {
-      onSuccess(data.slice(0, 10));
-      activatePage();
+      onSuccess(data.slice().sort(compareAds).slice(0, 10));
       setFilterChange(debounce(() => onSuccess(data), RERENDER_DELAY));
     })
     .catch((err) => {
@@ -48,8 +48,4 @@ const setUserFormSubmit = (onSuccess, onError) => {
   });
 };
 
-export {createLoader, setUserFormSubmit};
-// formFilters.addEventListener('change', () => {
-//         markerGroup.clearLayers();
-//         onSuccess(data);
-//       });
+export { createLoader, setUserFormSubmit };
