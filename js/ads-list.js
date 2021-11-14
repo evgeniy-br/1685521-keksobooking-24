@@ -1,5 +1,6 @@
-import {renderingBalloon} from './map.js';
-import {determinePrice, determineFeatures, compareAds} from './filter.js';
+import { renderingBalloon } from './map.js';
+import { determinePrice, determineFeatures, compareAds } from './filter.js';
+import { markerGroup } from './map.js';
 
 const TYPE_OF_HOUSING = {
   flat: 'Квартира',
@@ -34,6 +35,8 @@ const getTemplate = (similarAnnouncements) => {
   });
 
   similarAds
+    .slice()
+    .sort(compareAds)
     .forEach((announcementItem) => {
       announcementTemplate = cardTemplate.cloneNode(true); // Клон шаблона
       const avatar = announcementItem.author.avatar;
@@ -59,45 +62,25 @@ const getTemplate = (similarAnnouncements) => {
       const timeTemplate = announcementTemplate.querySelector('.popup__text--time');
       const descriptionTemplate = announcementTemplate.querySelector('.popup__description');
       const avatarTemplate = announcementTemplate.querySelector('.popup__avatar');
-
-      const removeBlockWithString = (block, template) => {
-        if (block === '') {
-          template.remove();
-        }
-      };
-
-      titleTemplate.textContent = title;
-      removeBlockWithString(title, timeTemplate);
-
-      addressTemplate.textContent = address;
-      removeBlockWithString(address, addressTemplate);
-
-      priceTemplate.textContent = `${price} ₽/ночь`;
-      removeBlockWithString(price, priceTemplate);
+      const userFeatures = announcementItem.offer.features;
+      const featuresTemplate = announcementTemplate.querySelector('.popup__features');
+      const featuresList = featuresTemplate.querySelectorAll('.popup__feature');
 
       const housing = housingTypesKeys.some((key) => type === key); // Проверяет наличие совпадений в словаре TYPE_OF_HOUSING с typeRandom, чтобы вывести соответвствующий тип жилья
+
+      titleTemplate.textContent = title;
+
+      addressTemplate.textContent = address;
+
+      priceTemplate.textContent = `${price} ₽/ночь`;
 
       if (housing) {
         typeTemplate.textContent = TYPE_OF_HOUSING[type];
       }
 
-      removeBlockWithString(type, typeTemplate);
-
       capacityTemplate.textContent = `${rooms} комнаты для ${guests} гостей`;
 
-      if (rooms === '' || guests === '') {
-        capacityTemplate.remove();
-      }
-
       timeTemplate.textContent = `Заезд после ${arrival}, выезд до ${departure}`;
-
-      if (arrival === '' || departure === '') {
-        timeTemplate.remove();
-      }
-
-      const userFeatures = announcementItem.offer.features;
-      const featuresTemplate = announcementTemplate.querySelector('.popup__features');
-      const featuresList = featuresTemplate.querySelectorAll('.popup__feature');
 
       if (userFeatures) {
         featuresList.forEach((featuresListItem) => {
@@ -122,24 +105,20 @@ const getTemplate = (similarAnnouncements) => {
           photosTemplate.appendChild(clonePhoto);
           i++;
         }
-      } else {
-        photosTemplate.remove();
       }
 
-      removeBlockWithString(arrayRandomPhotos, photosTemplate);
-
       descriptionTemplate.textContent = description;
-      removeBlockWithString(description, descriptionTemplate);
 
       avatarTemplate.src = avatar;
-      removeBlockWithString(avatar, avatarTemplate);
 
       templateContent.appendChild(announcementTemplate);
     });
 
   const balloons = Array.from(templateContent.querySelectorAll('.popup'));
 
-  renderingBalloon(similarAds.sort(compareAds).slice(0, 10), balloons);
+  markerGroup.clearLayers();
+
+  renderingBalloon(similarAds.slice(0, 10), balloons);
 };
 
-export {getTemplate, templateContent};
+export { getTemplate, templateContent };
