@@ -66,13 +66,13 @@ const getTemplate = (similarAnnouncements) => {
       const featuresTemplate = announcementTemplate.querySelector('.popup__features');
       const featuresList = featuresTemplate.querySelectorAll('.popup__feature');
 
+      const housing = housingTypesKeys.some((key) => type === key); // Проверяет наличие совпадений в словаре TYPE_OF_HOUSING с typeRandom, чтобы вывести соответвствующий тип жилья
+
       titleTemplate.textContent = title;
 
       addressTemplate.textContent = address;
 
       priceTemplate.textContent = `${price} ₽/ночь`;
-
-      const housing = housingTypesKeys.some((key) => type === key); // Проверяет наличие совпадений в словаре TYPE_OF_HOUSING с typeRandom, чтобы вывести соответвствующий тип жилья
 
       if (housing) {
         typeTemplate.textContent = TYPE_OF_HOUSING[type];

@@ -62,6 +62,55 @@ const onErrorClick = () => {
   closeMessageError();
 };
 
+// Сброс формы
+
+const openSuccessMessage = () => {
+  userForm.reset();
+  formFilters.reset();
+  resetMainMarker();
+  markerGroup.clearLayers();
+  loadAds();
+  indexBody.appendChild(successMessage);
+
+  document.addEventListener('keydown', onSuccessEscapeKeydown);
+
+  document.addEventListener('click', onSuccessClick);
+};
+
+const setFilterChange = (cb) => {
+  formFilters.addEventListener('change', () => {
+    cb();
+  });
+};
+
+const activateInactiveState = () => {
+  // Блокировка формы нового объявления
+  formAnnouncement.classList.add('ad-form--disabled');
+  formAnnouncementFieldsets.forEach((fieldset) => {
+    fieldset.setAttribute('disabled', '');
+  });
+  // Блокировка фильтров
+  formMapFilters.classList.add('map__filters--disabled');
+  formMapFiltersFieldset.setAttribute('disabled', '');
+  formMapFiltersSelect.forEach((select) => {
+    select.setAttribute('disabled', '');
+  });
+};
+
+const activateActiveState = () => {
+  // Разблокировка формы нового объявления
+  formAnnouncement.classList.remove('ad-form--disabled');
+  formAnnouncementFieldsets.forEach((fieldset) => {
+    fieldset.removeAttribute('disabled', '');
+  });
+  // Разблокировка фильтров
+  formMapFilters.classList.remove('map__filters--disabled');
+  formMapFiltersFieldset.removeAttribute('disabled', '');
+  formMapFiltersSelect.forEach((select) => {
+    select.removeAttribute('disabled', '');
+  });
+};
+
 // Валидация заголовка объявления "на лету"
 
 headlineInput.addEventListener('input', () => {
@@ -111,42 +160,18 @@ roomNumberSelect.addEventListener('input', () => {
     }
   });
 
-  if (capacitySelect.value > roomNumberValue || Number(roomNumberValue) === Number(100)) {
-    capacitySelect.setCustomValidity('Слишком много гостей для выбранного количества комнат :(');
-  } else {
+  if (capacitySelect.value > roomNumberValue || Number(capacitySelect.value) === Number(0)) {
+    capacitySelect.setCustomValidity('Неподходящее количество гостей для выбранного количества комнат :(');
+  } else  {
+    capacitySelect.setCustomValidity('');
+  }
+
+  if ((Number(roomNumberValue) === Number(100) && Number(capacitySelect) === Number(0))) {
     capacitySelect.setCustomValidity('');
   }
 
   capacitySelect.reportValidity();
 });
-
-const activateInactiveState = () => {
-  // Блокировка формы нового объявления
-  formAnnouncement.classList.add('ad-form--disabled');
-  formAnnouncementFieldsets.forEach((fieldset) => {
-    fieldset.setAttribute('disabled', '');
-  });
-  // Блокировка фильтров
-  formMapFilters.classList.add('map__filters--disabled');
-  formMapFiltersFieldset.setAttribute('disabled', '');
-  formMapFiltersSelect.forEach((select) => {
-    select.setAttribute('disabled', '');
-  });
-};
-
-const activateActiveState = () => {
-  // Разблокировка формы нового объявления
-  formAnnouncement.classList.remove('ad-form--disabled');
-  formAnnouncementFieldsets.forEach((fieldset) => {
-    fieldset.removeAttribute('disabled', '');
-  });
-  // Разблокировка фильтров
-  formMapFilters.classList.remove('map__filters--disabled');
-  formMapFiltersFieldset.removeAttribute('disabled', '');
-  formMapFiltersSelect.forEach((select) => {
-    select.removeAttribute('disabled', '');
-  });
-};
 
 // Синхронизация полей "тип жилья" и "цена за ночь"
 
@@ -173,19 +198,6 @@ timeOut.addEventListener('input', () => {
   }
 });
 
-// Сброс формы
-const openSuccessMessage = () => {
-  userForm.reset();
-  formFilters.reset();
-  resetMainMarker();
-  markerGroup.clearLayers();
-  loadAds();
-  indexBody.appendChild(successMessage);
-
-  document.addEventListener('keydown', onSuccessEscapeKeydown);
-
-  document.addEventListener('click', onSuccessClick);
-};
 
 function closeSuccessMessage () {
   successMessage.remove();
@@ -220,11 +232,5 @@ formResetButton.addEventListener('click', () => {
   formFilters.reset();
   loadAds();
 });
-
-const setFilterChange = (cb) => {
-  formFilters.addEventListener('change', () => {
-    cb();
-  });
-};
 
 export { activateActiveState, openSuccessMessage, closeSuccessMessage, closeMessageError, userForm, setFilterChange, openMessageError, activateInactiveState };
