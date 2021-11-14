@@ -1,5 +1,5 @@
 import { getTemplate } from './ads-list.js';
-import { resetForm, treatmentMessageError, activateInactiveState } from './user-form.js';
+import { openSuccessMessage, openMessageError, activateInactiveState } from './user-form.js';
 import './map.js';
 import { createLoader, setUserFormSubmit } from './load.js';
 import { showAlert } from './util.js';
@@ -11,6 +11,6 @@ activateInactiveState();
 
 loadAds();
 
-setUserFormSubmit(resetForm, treatmentMessageError);
+setUserFormSubmit(openSuccessMessage, openMessageError);
 
 export { loadAds };

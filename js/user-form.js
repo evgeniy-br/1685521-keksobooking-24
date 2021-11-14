@@ -31,8 +31,38 @@ const errorMessageContent = document.querySelector('#error').content;
 const errorMessage = errorMessageContent.querySelector('.error');
 const errorButton = errorMessage.querySelector('.error__button');
 const formResetButton = userForm.querySelector('.ad-form__reset');
+const formAnnouncement = document.querySelector('.ad-form');
+const formAnnouncementFieldsets = formAnnouncement.querySelectorAll('fieldset');
+const formMapFilters = document.querySelector('.map__filters');
+const formMapFiltersFieldset = formMapFilters.querySelector('.map__features');
+const formMapFiltersSelect = formMapFilters.querySelectorAll('.map__filter');
 
-//Валидация заголовка объявления "на лету"
+// Обработчики открытия\закрытия сообщения об успешной отправке\ошибке
+
+const onSuccessEscapeKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeSuccessMessage();
+  }
+};
+
+const onSuccessClick = () => {
+  successMessage.remove();
+  closeSuccessMessage();
+};
+
+const onErrorEscapeKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeMessageError();
+  }
+};
+
+const onErrorClick = () => {
+  closeMessageError();
+};
+
+// Валидация заголовка объявления "на лету"
 
 headlineInput.addEventListener('input', () => {
   const valueLength = headlineInput.value.length;
@@ -65,13 +95,13 @@ priceInput.addEventListener('input', () => {
 roomNumberSelect.addEventListener('input', () => {
   const roomNumberValue = roomNumberSelect.value;
 
-  capacityOptions.forEach((option) => {
-    const optionValue = option.value;
-    const addsDiasabled = () => option.setAttribute('disabled', '');
+  capacityOptions.forEach((capacityOption) => {
+    const capacityOptionValue = capacityOption.value;
+    const addsDiasabled = () => capacityOption.setAttribute('disabled', '');
 
-    option.removeAttribute('disabled', '');
+    capacityOption.removeAttribute('disabled', '');
 
-    if (optionValue > roomNumberValue || Number(optionValue) === Number(0)) {
+    if (capacityOptionValue > roomNumberValue || Number(capacityOptionValue) === Number(0)) {
       addsDiasabled();
     }
 
@@ -80,13 +110,15 @@ roomNumberSelect.addEventListener('input', () => {
       capacityOptions[3].removeAttribute('disabled', '');
     }
   });
-});
 
-const formAnnouncement = document.querySelector('.ad-form');
-const formAnnouncementFieldsets = formAnnouncement.querySelectorAll('fieldset');
-const formMapFilters = document.querySelector('.map__filters');
-const formMapFiltersFieldset = formMapFilters.querySelector('.map__features');
-const formMapFiltersSelect = formMapFilters.querySelectorAll('.map__filter');
+  if (capacitySelect.value > roomNumberValue || Number(roomNumberValue) === Number(100)) {
+    capacitySelect.setCustomValidity('Слишком много гостей для выбранного количества комнат :(');
+  } else {
+    capacitySelect.setCustomValidity('');
+  }
+
+  capacitySelect.reportValidity();
+});
 
 const activateInactiveState = () => {
   // Блокировка формы нового объявления
@@ -142,8 +174,7 @@ timeOut.addEventListener('input', () => {
 });
 
 // Сброс формы
-
-const resetForm = () => {
+const openSuccessMessage = () => {
   userForm.reset();
   formFilters.reset();
   resetMainMarker();
@@ -151,36 +182,37 @@ const resetForm = () => {
   loadAds();
   indexBody.appendChild(successMessage);
 
-  document.addEventListener('keydown', (evt) => {
-    if (isEscapeKey) {
-      evt.preventDefault();
-      successMessage.remove();
-    }
-  });
+  document.addEventListener('keydown', onSuccessEscapeKeydown);
 
-  document.addEventListener('click', () => {
-    successMessage.remove();
-  });
+  document.addEventListener('click', onSuccessClick);
 };
 
-const treatmentMessageError = () => {
+function closeSuccessMessage () {
+  successMessage.remove();
+
+  document.removeEventListener('keydown', onSuccessEscapeKeydown);
+  document.removeEventListener('click', onSuccessClick);
+}
+
+function openMessageError () {
   indexBody.appendChild(errorMessage);
 
-  document.addEventListener('keydown', (evt) => {
-    if (isEscapeKey) {
-      evt.preventDefault();
-      errorMessage.remove();
-    }
-  });
+  document.addEventListener('keydown', onErrorEscapeKeydown);
 
-  document.addEventListener('click', () => {
-    errorMessage.remove();
-  });
+  document.addEventListener('click', onErrorClick);
 
-  errorButton.addEventListener('click', () => {
-    errorMessage.remove();
-  });
-};
+  errorButton.addEventListener('click', onErrorClick);
+}
+
+function closeMessageError () {
+  errorMessage.remove();
+
+  document.removeEventListener('keydown', onErrorEscapeKeydown);
+
+  document.removeEventListener('click', onErrorClick);
+
+  errorButton.removeEventListener('click', onErrorClick);
+}
 
 formResetButton.addEventListener('click', () => {
   markerGroup.clearLayers();
@@ -195,4 +227,4 @@ const setFilterChange = (cb) => {
   });
 };
 
-export { activateActiveState, resetForm, userForm, setFilterChange, treatmentMessageError, activateInactiveState };
+export { activateActiveState, openSuccessMessage, closeSuccessMessage, closeMessageError, userForm, setFilterChange, openMessageError, activateInactiveState };
