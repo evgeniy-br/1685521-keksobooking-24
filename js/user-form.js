@@ -1,5 +1,6 @@
-import {resetMainMarker, markerGroup} from './map.js';
-import {loadAds} from './main.js';
+import { resetMainMarker, markerGroup } from './map.js';
+import { loadAds } from './main.js';
+import { isEscapeKey } from './util.js';
 
 const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
@@ -30,8 +31,87 @@ const errorMessageContent = document.querySelector('#error').content;
 const errorMessage = errorMessageContent.querySelector('.error');
 const errorButton = errorMessage.querySelector('.error__button');
 const formResetButton = userForm.querySelector('.ad-form__reset');
+const formAnnouncement = document.querySelector('.ad-form');
+const formAnnouncementFieldsets = formAnnouncement.querySelectorAll('fieldset');
+const formMapFilters = document.querySelector('.map__filters');
+const formMapFiltersFieldset = formMapFilters.querySelector('.map__features');
+const formMapFiltersSelect = formMapFilters.querySelectorAll('.map__filter');
 
-//Валидация заголовка объявления "на лету"
+// Обработчики открытия\закрытия сообщения об успешной отправке\ошибке
+
+const onSuccessEscapeKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeSuccessMessage();
+  }
+};
+
+const onSuccessClick = () => {
+  successMessage.remove();
+  closeSuccessMessage();
+};
+
+const onErrorEscapeKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeMessageError();
+  }
+};
+
+const onErrorClick = () => {
+  closeMessageError();
+};
+
+// Сброс формы
+
+const openSuccessMessage = () => {
+  userForm.reset();
+  formFilters.reset();
+  resetMainMarker();
+  markerGroup.clearLayers();
+  loadAds();
+  indexBody.appendChild(successMessage);
+
+  document.addEventListener('keydown', onSuccessEscapeKeydown);
+
+  document.addEventListener('click', onSuccessClick);
+};
+
+const setFilterChange = (cb) => {
+  formFilters.addEventListener('change', () => {
+    cb();
+  });
+};
+
+const activateInactiveState = () => {
+  // Блокировка формы нового объявления
+  formAnnouncement.classList.add('ad-form--disabled');
+  formAnnouncementFieldsets.forEach((fieldset) => {
+    fieldset.setAttribute('disabled', '');
+  });
+  // Блокировка фильтров
+  formMapFilters.classList.add('map__filters--disabled');
+  formMapFiltersFieldset.setAttribute('disabled', '');
+  formMapFiltersSelect.forEach((select) => {
+    select.setAttribute('disabled', '');
+  });
+};
+
+const activateActiveState = () => {
+  // Разблокировка формы нового объявления
+  formAnnouncement.classList.remove('ad-form--disabled');
+  formAnnouncementFieldsets.forEach((fieldset) => {
+    fieldset.removeAttribute('disabled', '');
+  });
+  // Разблокировка фильтров
+  formMapFilters.classList.remove('map__filters--disabled');
+  formMapFiltersFieldset.removeAttribute('disabled', '');
+  formMapFiltersSelect.forEach((select) => {
+    select.removeAttribute('disabled', '');
+  });
+};
+
+// Валидация заголовка объявления "на лету"
 
 headlineInput.addEventListener('input', () => {
   const valueLength = headlineInput.value.length;
@@ -64,13 +144,13 @@ priceInput.addEventListener('input', () => {
 roomNumberSelect.addEventListener('input', () => {
   const roomNumberValue = roomNumberSelect.value;
 
-  capacityOptions.forEach((option) => {
-    const optionValue = option.value;
-    const addsDiasabled = () => option.setAttribute('disabled', '');
+  capacityOptions.forEach((capacityOption) => {
+    const capacityOptionValue = capacityOption.value;
+    const addsDiasabled = () => capacityOption.setAttribute('disabled', '');
 
-    option.removeAttribute('disabled', '');
+    capacityOption.removeAttribute('disabled', '');
 
-    if (optionValue > roomNumberValue || Number(optionValue) === Number(0)) {
+    if (capacityOptionValue > roomNumberValue || Number(capacityOptionValue) === Number(0)) {
       addsDiasabled();
     }
 
@@ -79,45 +159,19 @@ roomNumberSelect.addEventListener('input', () => {
       capacityOptions[3].removeAttribute('disabled', '');
     }
   });
+
+  if (capacitySelect.value > roomNumberValue || Number(capacitySelect.value) === Number(0)) {
+    capacitySelect.setCustomValidity('Неподходящее количество гостей для выбранного количества комнат :(');
+  } else  {
+    capacitySelect.setCustomValidity('');
+  }
+
+  if ((Number(roomNumberValue) === Number(100) && Number(capacitySelect) === Number(0))) {
+    capacitySelect.setCustomValidity('');
+  }
+
+  capacitySelect.reportValidity();
 });
-
-const formAnnouncement = document.querySelector('.ad-form');
-const formAnnouncementFieldsets = formAnnouncement.querySelectorAll('fieldset');
-const formMapFilters = document.querySelector('.map__filters');
-const formMapFiltersFieldset = formMapFilters.querySelector('.map__features');
-const formMapFiltersSelect = formMapFilters.querySelectorAll('.map__filter');
-
-const activateInactiveState = () => {
-  // Блокировка формы нового объявления
-  formAnnouncement.classList.add('ad-form--disabled');
-  formAnnouncementFieldsets.forEach((fieldset) => {
-    fieldset.setAttribute('disabled', '');
-  });
-  // Блокировка фильтров
-  formMapFilters.classList.add('map__filters--disabled');
-  formMapFiltersFieldset.setAttribute('disabled', '');
-  formMapFiltersSelect.forEach((select) => {
-    select.setAttribute('disabled', '');
-  });
-};
-
-activateInactiveState();
-
-const activateActiveState = () => {
-  // Разблокировка формы нового объявления
-  formAnnouncement.classList.remove('ad-form--disabled');
-  formAnnouncementFieldsets.forEach((fieldset) => {
-    fieldset.removeAttribute('disabled', '');
-  });
-  // Разблокировка фильтров
-  formMapFilters.classList.remove('map__filters--disabled');
-  formMapFiltersFieldset.removeAttribute('disabled', '');
-  formMapFiltersSelect.forEach((select) => {
-    select.removeAttribute('disabled', '');
-  });
-};
-
-activateActiveState();
 
 // Синхронизация полей "тип жилья" и "цена за ночь"
 
@@ -144,46 +198,33 @@ timeOut.addEventListener('input', () => {
   }
 });
 
-// Сброс формы
 
-const resetForm = () => {
-  userForm.reset();
-  formFilters.reset();
-  resetMainMarker();
-  markerGroup.clearLayers();
-  loadAds();
-  indexBody.appendChild(successMessage);
+function closeSuccessMessage () {
+  successMessage.remove();
 
-  document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      successMessage.remove();
-    }
-  });
+  document.removeEventListener('keydown', onSuccessEscapeKeydown);
+  document.removeEventListener('click', onSuccessClick);
+}
 
-  document.addEventListener('click', () => {
-    successMessage.remove();
-  });
-};
-
-const treatmentMessageError = () => {
+function openMessageError () {
   indexBody.appendChild(errorMessage);
 
-  document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      errorMessage.remove();
-    }
-  });
+  document.addEventListener('keydown', onErrorEscapeKeydown);
 
-  document.addEventListener('click', () => {
-    errorMessage.remove();
-  });
+  document.addEventListener('click', onErrorClick);
 
-  errorButton.addEventListener('click', () => {
-    errorMessage.remove();
-  });
-};
+  errorButton.addEventListener('click', onErrorClick);
+}
+
+function closeMessageError () {
+  errorMessage.remove();
+
+  document.removeEventListener('keydown', onErrorEscapeKeydown);
+
+  document.removeEventListener('click', onErrorClick);
+
+  errorButton.removeEventListener('click', onErrorClick);
+}
 
 formResetButton.addEventListener('click', () => {
   markerGroup.clearLayers();
@@ -192,11 +233,4 @@ formResetButton.addEventListener('click', () => {
   loadAds();
 });
 
-const setFilterChange = (cb) => {
-  formFilters.addEventListener('change', () => {
-    cb();
-    markerGroup.clearLayers();
-  });
-};
-
-export {activateActiveState, resetForm, userForm, setFilterChange, treatmentMessageError, activateInactiveState};
+export { activateActiveState, openSuccessMessage, closeSuccessMessage, closeMessageError, userForm, setFilterChange, openMessageError, activateInactiveState };

@@ -54,4 +54,6 @@ const isArrayInclude = (array1, array2) => {
   return isInclude;
 };
 
-export {getRandomInteger, getRandomFractionalNumber, showAlert, isArrayInclude};
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export { getRandomInteger, getRandomFractionalNumber, showAlert, isArrayInclude, isEscapeKey };

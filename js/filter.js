@@ -62,4 +62,5 @@ const compareAds = (adA, adB) => {
 
   return rankB - rankA;
 };
+
 export {determinePrice, determineFeatures, compareAds};
