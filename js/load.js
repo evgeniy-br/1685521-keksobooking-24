@@ -3,6 +3,7 @@ import { debounce } from './utils/debounce.js';
 import { compareAds } from './filter.js';
 
 const RERENDER_DELAY = 500;
+const NUMBER_OF_MARKERS_ON_THE_MAP = 10;
 
 const createLoader = (onSuccess, onError) => () => {
   fetch('https://24.javascript.pages.academy/keksobooking/data')
@@ -14,7 +15,7 @@ const createLoader = (onSuccess, onError) => () => {
       throw new Error('Не удалось получить данные с сервера. Попробуйте позже');
     })
     .then((data) => {
-      onSuccess(data.slice().sort(compareAds).slice(0, 10));
+      onSuccess(data.slice().sort(compareAds).slice(0, NUMBER_OF_MARKERS_ON_THE_MAP));
       setFilterChange(debounce(() => onSuccess(data), RERENDER_DELAY));
     })
     .catch((err) => {
@@ -48,4 +49,4 @@ const setUserFormSubmit = (onSuccess, onError) => {
   });
 };
 
-export { createLoader, setUserFormSubmit };
+export { createLoader, setUserFormSubmit, NUMBER_OF_MARKERS_ON_THE_MAP };
