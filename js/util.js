@@ -1,22 +1,5 @@
 const ALERT_SHOW_TIME = 10000;
 
-const getRandomInteger = function(min, max) {
-  if (min < 0 || min >= max) {
-    throw new Error('Некорректный диапозон чисел');
-  }
-
-  return Math.floor(min + Math.random() * (max + 1 - min));
-};
-
-const getRandomFractionalNumber = function(min, max, numberOfSigns) {
-  if (min < 0 || min >= max) {
-    throw new Error('Некорректный диапозон чисел');
-  }
-  const randomNumber = min + Math.random() * (max - min);
-
-  return +randomNumber.toFixed(numberOfSigns);
-};
-
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = 100;
@@ -56,4 +39,4 @@ const isArrayInclude = (array1, array2) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export { getRandomInteger, getRandomFractionalNumber, showAlert, isArrayInclude, isEscapeKey };
+export { showAlert, isArrayInclude, isEscapeKey };

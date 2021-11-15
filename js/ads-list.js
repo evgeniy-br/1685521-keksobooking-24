@@ -1,6 +1,7 @@
 import { renderingBalloon } from './map.js';
 import { determinePrice, determineFeatures, compareAds } from './filter.js';
 import { markerGroup } from './map.js';
+import { NUMBER_OF_MARKERS_ON_THE_MAP } from './load.js';
 
 const TYPE_OF_HOUSING = {
   flat: 'Квартира',
@@ -118,7 +119,7 @@ const getTemplate = (similarAnnouncements) => {
 
   markerGroup.clearLayers();
 
-  renderingBalloon(similarAds.slice(0, 10), balloons);
+  renderingBalloon(similarAds.slice(0, NUMBER_OF_MARKERS_ON_THE_MAP), balloons);
 };
 
 export { getTemplate, templateContent };

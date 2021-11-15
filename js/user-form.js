@@ -13,6 +13,7 @@ const PRICE_OF_HOUSING = {
   hotel: 3000,
 };
 
+const PRICE_DEFAULT_PLACEHOLDER = 1000;
 const headlineInput = document.querySelector('#title');
 const priceInput = document.querySelector('#price');
 const roomNumberSelect = document.querySelector('#room_number');
@@ -68,6 +69,7 @@ const openSuccessMessage = () => {
   userForm.reset();
   formFilters.reset();
   resetMainMarker();
+  priceInput.placeholder = PRICE_DEFAULT_PLACEHOLDER;
   markerGroup.clearLayers();
   loadAds();
   indexBody.appendChild(successMessage);
@@ -231,6 +233,7 @@ formResetButton.addEventListener('click', () => {
   resetMainMarker();
   formFilters.reset();
   loadAds();
+  priceInput.placeholder = PRICE_DEFAULT_PLACEHOLDER;
 });
 
 export { activateActiveState, openSuccessMessage, closeSuccessMessage, closeMessageError, userForm, setFilterChange, openMessageError, activateInactiveState };
