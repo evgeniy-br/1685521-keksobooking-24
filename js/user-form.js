@@ -79,6 +79,16 @@ const openSuccessMessage = () => {
   document.addEventListener('click', onSuccessClick);
 };
 
+const openMessageError = () => {
+  indexBody.appendChild(errorMessage);
+
+  document.addEventListener('keydown', onErrorEscapeKeydown);
+
+  document.addEventListener('click', onErrorClick);
+
+  errorButton.addEventListener('click', onErrorClick);
+};
+
 const setFilterChange = (cb) => {
   formFilters.addEventListener('change', () => {
     cb();
@@ -200,22 +210,11 @@ timeOut.addEventListener('input', () => {
   }
 });
 
-
 function closeSuccessMessage () {
   successMessage.remove();
 
   document.removeEventListener('keydown', onSuccessEscapeKeydown);
   document.removeEventListener('click', onSuccessClick);
-}
-
-function openMessageError () {
-  indexBody.appendChild(errorMessage);
-
-  document.addEventListener('keydown', onErrorEscapeKeydown);
-
-  document.addEventListener('click', onErrorClick);
-
-  errorButton.addEventListener('click', onErrorClick);
 }
 
 function closeMessageError () {
