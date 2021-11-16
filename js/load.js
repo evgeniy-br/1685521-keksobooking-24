@@ -1,4 +1,4 @@
-import { userForm, setFilterChange } from './user-form.js';
+import { userForm, setFilterChange, activateForm } from './user-form.js';
 import { debounce } from './utils/debounce.js';
 import { compareAds } from './filter.js';
 
@@ -19,6 +19,7 @@ const createLoader = (onSuccess, onError) => () => {
       setFilterChange(debounce(() => onSuccess(data), RERENDER_DELAY));
     })
     .catch((err) => {
+      activateForm();
       onError(err);
     });
 };

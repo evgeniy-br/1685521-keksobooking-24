@@ -2,6 +2,15 @@ import { activateActiveState } from './user-form.js';
 
 const START_LAT = 35.68469;
 const START_LNG = 139.77086;
+const MAIN_MARKER_WIDTH = 52;
+const MAIN_MARKER_HEIGHT = 52;
+const MAIN_MARKER_WIDTH_ANCHOR = 26;
+const MAIN_MARKER_HEIGHT_ANCHOR = 52;
+const ANNOUNCEMENT_MARKER_WIDTH = 40;
+const ANNOUNCEMENT_MARKER_HEIGHT = 40;
+const ANNOUNCEMENT_MARKER_WIDTH_ANCHOR = 20;
+const ANNOUNCEMENT_MARKER_HEIGHT_ANCHOR = 40;
+
 
 const address = document.querySelector('#address');
 
@@ -26,16 +35,16 @@ L.tileLayer(
 const mainPinIcon = L.icon(
   {
     iconUrl: 'img/main-pin.svg',
-    iconSize: [52, 52],
-    iconAnchor: [26, 52],
+    iconSize: [MAIN_MARKER_WIDTH, MAIN_MARKER_HEIGHT],
+    iconAnchor: [MAIN_MARKER_WIDTH_ANCHOR, MAIN_MARKER_HEIGHT_ANCHOR],
   },
 );
 
 const announcementIcon = L.icon(
   {
     iconUrl: 'img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: [ANNOUNCEMENT_MARKER_WIDTH, ANNOUNCEMENT_MARKER_HEIGHT],
+    iconAnchor: [ANNOUNCEMENT_MARKER_WIDTH_ANCHOR, ANNOUNCEMENT_MARKER_HEIGHT_ANCHOR],
   },
 );
 

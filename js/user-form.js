@@ -109,18 +109,28 @@ const activateInactiveState = () => {
   });
 };
 
-const activateActiveState = () => {
-  // Разблокировка формы нового объявления
+// Разблокировка формы нового объявления
+
+const activateForm = () => {
   formAnnouncement.classList.remove('ad-form--disabled');
   formAnnouncementFieldsets.forEach((fieldset) => {
     fieldset.removeAttribute('disabled', '');
   });
-  // Разблокировка фильтров
+};
+
+// Разблокировка фильтров
+
+const activateFilter = () => {
   formMapFilters.classList.remove('map__filters--disabled');
   formMapFiltersFieldset.removeAttribute('disabled', '');
   formMapFiltersSelect.forEach((select) => {
     select.removeAttribute('disabled', '');
   });
+};
+
+const activateActiveState = () => {
+  activateForm();
+  activateFilter();
 };
 
 // Валидация заголовка объявления "на лету"
@@ -235,4 +245,4 @@ formResetButton.addEventListener('click', () => {
   priceInput.placeholder = PRICE_DEFAULT_PLACEHOLDER;
 });
 
-export { activateActiveState, openSuccessMessage, closeSuccessMessage, closeMessageError, userForm, setFilterChange, openMessageError, activateInactiveState };
+export { activateForm, activateActiveState, openSuccessMessage, closeSuccessMessage, closeMessageError, userForm, setFilterChange, openMessageError, activateInactiveState };
