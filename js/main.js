@@ -4,6 +4,7 @@ import './map.js';
 import { createLoader, setUserFormSubmit } from './load.js';
 import { showAlert } from './util.js';
 import './filter.js';
+import './preview-photo.js';
 
 const loadAds = createLoader(getTemplate, showAlert);
 
